@@ -6,7 +6,7 @@
 /*   By: chael-ha <chael-ha@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/17 14:25:00 by chael-ha          #+#    #+#             */
-/*   Updated: 2021/09/25 16:57:34 by chael-ha         ###   ########.fr       */
+/*   Updated: 2021/09/25 18:13:54 by chael-ha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -235,19 +235,24 @@ int	ft_load_texture(char *path, t_texture *data, t_mlx *mlx)
 	return (1);
 }
 
-void map_texture_array(t_mlx *mlx)
+void map_texture_array(t_mlx *mlx, t_texture *text)
 {
-	float ratio_x = (float)mlx->w_text.img_width/(float)SIZE; 
-	float ratio_y = (float)mlx->w_text.img_height/(float)SIZE; 
-	mlx->mw_text.img = mlx_new_image(mlx->win.mlx_ptr, SIZE, SIZE);
-	mlx->mw_text.addr = mlx_get_data_addr(mlx->mw_text.img, &mlx->mw_text.bits_per_pixel, &mlx->mw_text.line_length,&mlx->mw_text.endian);
+	t_texture mapped_texture;
+
+	float ratio_x = (float)text->img_width/(float)SIZE; 
+	float ratio_y = (float)text->img_height/(float)SIZE; 
+	mapped_texture.img = mlx_new_image(mlx->win.mlx_ptr, SIZE, SIZE);
+	mapped_texture.addr = mlx_get_data_addr(mapped_texture.img, &mapped_texture.bits_per_pixel, &mapped_texture.line_length,&mapped_texture.endian);
 	int i = -1;
 	while(++i < SIZE)
 	{
 		int j = -1;
 		while(++j < SIZE)
-			my_mlx_pixel_put(&mlx->mw_text, i, j, ((int *)mlx->w_text.img)[(int)(j * ratio_y) * mlx->w_text.img_width + (int)(i * ratio_x)]);//postion in text tab
+			my_mlx_pixel_put(&mapped_texture, i, j, ((int *)text->img)[(int)(j * ratio_y) * text->img_width + (int)(i * ratio_x)]);//postion in text tab
 	}
+
+	// mlx_destroy_image(mlx->win.mlx_ptr, text->img); // @TODO: delete original texture
+	(*text) = mapped_texture;
 }
 
 void	draw_square(int i, int j, t_mlx mlx)
@@ -263,7 +268,7 @@ void	draw_square(int i, int j, t_mlx mlx)
 	// 	{
 			//and here
 
-			mlx_put_image_to_window(mlx.win.mlx_ptr, mlx.win.win_ptr, mlx.mw_text.img, j * SIZE, i * SIZE);
+			mlx_put_image_to_window(mlx.win.mlx_ptr, mlx.win.win_ptr, mlx.w_text.img, j * SIZE, i * SIZE);
 			//my_mlx_pixel_put(data, x + (j * SIZE), y + (i * SIZE), 0x00ff00ff);
 	// 		y++;
 	// 	}
@@ -321,11 +326,32 @@ void    draw_map(t_mlx *mlx)
         while (mlx->lines[i][j])
         {
 			if (mlx->lines[i][j] == '1')
-				mlx_put_image_to_window(mlx->win.mlx_ptr, mlx->win.win_ptr, mlx->mw_text.img, j * SIZE, i * SIZE);
+				mlx_put_image_to_window(mlx->win.mlx_ptr, mlx->win.win_ptr, mlx->w_text.img, j * SIZE, i * SIZE);
+			else if (mlx->lines[i][j] == 'P')
+				mlx_put_image_to_window(mlx->win.mlx_ptr, mlx->win.win_ptr, mlx->p_text.img, j * SIZE, i * SIZE);
+			else if (mlx->lines[i][j] == 'C')
+				mlx_put_image_to_window(mlx->win.mlx_ptr, mlx->win.win_ptr, mlx->c_text.img, j * SIZE, i * SIZE);
 			j++;
         }
         i++;
     }
+}
+
+void ft_load_ressources(t_mlx *mlx) 
+{
+	mlx->w_text.relative_path = "/Users/chael-ha/Desktop/texture/textures/grass.xpm";
+	ft_load_texture(mlx->w_text.relative_path, &mlx->w_text, mlx);
+
+
+	mlx->p_text.relative_path = "/Users/chael-ha/Desktop/texture/textures/mc.xpm";
+	ft_load_texture(mlx->p_text.relative_path, &mlx->p_text, mlx);
+
+	mlx->c_text.relative_path = "/Users/chael-ha/Desktop/ft_cub 2/textures/bit.xpm";
+	ft_load_texture(mlx->c_text.relative_path, &mlx->c_text, mlx);
+	
+	map_texture_array(mlx, &mlx->w_text);
+	map_texture_array(mlx, &mlx->p_text);
+	map_texture_array(mlx, &mlx->c_text);
 }
 
 int main(int argc, char **argv)
@@ -335,7 +361,6 @@ int main(int argc, char **argv)
 	t_mlx	mlx;
 
 	char **s;
-	mlx.w_text.relative_path = "/Users/chael-ha/Desktop/texture/textures/brick.xpm";
 	s = ft_readmap(argv[1], &mlx);
 	i = 0;
 	while(s[i])
@@ -347,8 +372,7 @@ int main(int argc, char **argv)
 	mlx.win.win_ptr = mlx_new_window(mlx.win.mlx_ptr, WINDOW_WIDTH, WINDOW_HEIGHT, "./so_long");
 	mlx.screen_img.img = mlx_new_image(mlx.win.mlx_ptr, WINDOW_WIDTH, WINDOW_HEIGHT);// NOT THERE ANYMORE
 	mlx.screen_img.addr = mlx_get_data_addr(mlx.screen_img.img, &mlx.screen_img.bits_per_pixel, &mlx.screen_img.line_length,&mlx.screen_img.endian);
-	ft_load_texture(mlx.w_text.relative_path, &mlx.w_text, &mlx);
-	map_texture_array(&mlx);
+	ft_load_ressources(&mlx);
 	draw_map(&mlx);
 	mlx_loop(mlx.win.mlx_ptr); //window rendering
 }

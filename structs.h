@@ -6,7 +6,7 @@
 /*   By: chael-ha <chael-ha@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/17 14:25:09 by chael-ha          #+#    #+#             */
-/*   Updated: 2021/09/25 15:36:40 by chael-ha         ###   ########.fr       */
+/*   Updated: 2021/09/25 17:41:49 by chael-ha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,6 @@ typedef	struct		s_mlx
 	t_texture		p_text;
 	t_texture		c_text;
 	t_texture		w_text;
-	t_texture		mw_text;
 	t_texture		screen_img;
 }					t_mlx;
 
