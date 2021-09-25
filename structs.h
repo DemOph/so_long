@@ -6,7 +6,7 @@
 /*   By: chael-ha <chael-ha@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/17 14:25:09 by chael-ha          #+#    #+#             */
-/*   Updated: 2021/09/24 18:53:50 by chael-ha         ###   ########.fr       */
+/*   Updated: 2021/09/25 15:36:40 by chael-ha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,18 @@ typedef struct	s_data {
 	int		img_height;
 }				t_data;
 
+typedef struct	s_texture{
+	void	*img;
+	char	*addr;
+	int		bits_per_pixel;
+	int		line_length;
+	int		endian;
+	char	*relative_path;
+	int		img_width;
+	int		img_height;	
+}				t_texture;
+
+
 
 t_data mapped_texture;
 t_data texture;
@@ -56,6 +68,11 @@ typedef	struct		s_mlx
 	int				max_x;
 	int				max_y;
 	int				nb_map_char;
+	t_texture		p_text;
+	t_texture		c_text;
+	t_texture		w_text;
+	t_texture		mw_text;
+	t_texture		screen_img;
 }					t_mlx;
 
 
