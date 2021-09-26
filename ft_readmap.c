@@ -6,7 +6,7 @@
 /*   By: chael-ha <chael-ha@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/17 14:25:00 by chael-ha          #+#    #+#             */
-/*   Updated: 2021/09/25 18:13:54 by chael-ha         ###   ########.fr       */
+/*   Updated: 2021/09/26 16:20:43 by chael-ha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,13 +68,18 @@ char	**getMapLines(char **lines, char **tmp, int fd)
 	return (lines);
 }
 
-void	check_map_necessities(char c, t_mlx *mlx)
+void	check_map_necessities(int i, int j, t_mlx *mlx)
 {
-	if (c == 'P')
-		mlx->player++;
-	else if (c == 'C')
+	if (mlx->lines[i][j] == 'P')
+	{
+		mlx->player.player_count++;
+		mlx->player.x = j;
+		mlx->player.y = i;
+		//printf ("i = %d, j = %d\n", mlx->player.y,mlx->player.x);
+	}
+	else if (mlx->lines[i][j] == 'C')
 		mlx->collectible++;
-	else if (c == 'E')
+	else if (mlx->lines[i][j] == 'E')
 		mlx->exi++;
 }
 int	check_map(char **map, t_mlx *mlx)
@@ -92,7 +97,7 @@ int	check_map(char **map, t_mlx *mlx)
 				&& map[i][j] != '1' && map[i][j] != '0')
 				ft_put_error("map contain weird characters!", mlx);
 			if (map[i][j] != '0' && map[i][j] != '1')
-				check_map_necessities(map[i][j], mlx);
+				check_map_necessities(i, j, mlx);
 			j++;
 			mlx->nb_map_char++;
 		}
@@ -168,9 +173,10 @@ void	is_map_closed(t_mlx *mlx)
 void	is_map_valid(t_mlx *mlx)
 {
 	//if map doesnt have at least P C E not valid
-	if (!mlx->player || !mlx->collectible || !mlx->exi)
+	if (!mlx->player.player_count || !mlx->collectible || !mlx->exi)
 		ft_put_error("Map is invalid!\n", mlx);
 }
+
 char	**ft_readmap(char *filename, t_mlx *mlx)
 {
     int     fd;
@@ -354,6 +360,54 @@ void ft_load_ressources(t_mlx *mlx)
 	map_texture_array(mlx, &mlx->c_text);
 }
 
+void	move_right(t_mlx *mlx)
+{
+    if (mlx->lines[mlx->player.y][mlx->player.x + 1] != '1')
+    {
+        mlx->lines[mlx->player.y][mlx->player.x + 1] = 'P'; //update player pos in map
+        mlx->lines[mlx->player.y][mlx->player.x] = '0';//del P from old pos
+        mlx->player.x = mlx->player.x+1;
+		mlx->player.y = mlx->player.y;
+    }
+}
+void	screen_to_black(t_mlx *mlx)
+{
+	int i = 0;
+    int j = 0;
+	while (i < WINDOW_HEIGHT)
+	{
+	j = 0;
+	while (j < WINDOW_WIDTH)
+	{
+		my_mlx_pixel_put(&mlx->screen_img, j, i, 0x00000000);
+		j++;
+	}
+	i++;
+	}
+}
+
+int     key_press(int keycode, t_mlx *mlx)
+{
+    if (keycode == 53)
+        exit(0);
+   if (keycode == 2)
+    {
+        move_right(mlx);
+    }
+	// clean image
+	screen_to_black(mlx);
+	mlx_put_image_to_window(mlx->win.mlx_ptr, mlx->win.win_ptr, mlx->screen_img.img, 0, 0);
+	draw_map(mlx);
+
+    return (0);
+}
+
+int     key_release(int keycode, t_mlx *mlx)
+{
+    printf("Key pressed -> %d\n", keycode);
+    return (0);
+}
+
 int main(int argc, char **argv)
 {
 	(void)argc;
@@ -374,6 +428,8 @@ int main(int argc, char **argv)
 	mlx.screen_img.addr = mlx_get_data_addr(mlx.screen_img.img, &mlx.screen_img.bits_per_pixel, &mlx.screen_img.line_length,&mlx.screen_img.endian);
 	ft_load_ressources(&mlx);
 	draw_map(&mlx);
+	mlx_hook(mlx.win.win_ptr, 2, 1L<<0, key_press , &mlx);
+    mlx_hook(mlx.win.win_ptr, 3, 1L<<1, key_release , &mlx);//slower than mlx_loop_hook
 	mlx_loop(mlx.win.mlx_ptr); //window rendering
 }
 

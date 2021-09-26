@@ -6,7 +6,7 @@
 /*   By: chael-ha <chael-ha@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/17 14:25:09 by chael-ha          #+#    #+#             */
-/*   Updated: 2021/09/25 17:41:49 by chael-ha         ###   ########.fr       */
+/*   Updated: 2021/09/26 15:06:18 by chael-ha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,10 +58,17 @@ typedef struct		s_window
 	void			*win_ptr;
 }                   t_window;
 
+typedef struct		s_player_pos
+{
+	int				player_count;
+	int				x;
+	int				y;
+}					t_player_pos;
+
 typedef	struct		s_mlx
 {
 	t_window		win;
-	int				player;
+	t_player_pos	player;
 	int				collectible;
 	int				exi;
 	char			**lines;
@@ -81,7 +88,10 @@ void 		init_param(t_mlx *mlx)
 	mlx->max_x = 0;
 	mlx->max_y= 0;
 	mlx->nb_map_char = 0;
-	mlx->player = 0;
+	mlx->player.player_count = 0;
 	mlx->collectible = 0;
 	mlx->exi = 0;
 }
+
+// int     key_press(int keycode, t_mlx *mlx);
+// int     key_release(int keycode, t_mlx *mlx);
