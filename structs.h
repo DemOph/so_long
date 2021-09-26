@@ -6,7 +6,7 @@
 /*   By: chael-ha <chael-ha@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/17 14:25:09 by chael-ha          #+#    #+#             */
-/*   Updated: 2021/09/26 15:06:18 by chael-ha         ###   ########.fr       */
+/*   Updated: 2021/09/26 17:23:27 by chael-ha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,6 +63,7 @@ typedef struct		s_player_pos
 	int				player_count;
 	int				x;
 	int				y;
+	int				collect_ate;
 }					t_player_pos;
 
 typedef	struct		s_mlx
@@ -78,6 +79,7 @@ typedef	struct		s_mlx
 	t_texture		p_text;
 	t_texture		c_text;
 	t_texture		w_text;
+	t_texture		exit_text;
 	t_texture		screen_img;
 }					t_mlx;
 

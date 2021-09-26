@@ -6,7 +6,7 @@
 /*   By: chael-ha <chael-ha@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/17 14:25:00 by chael-ha          #+#    #+#             */
-/*   Updated: 2021/09/26 16:20:43 by chael-ha         ###   ########.fr       */
+/*   Updated: 2021/09/26 17:31:33 by chael-ha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -337,6 +337,8 @@ void    draw_map(t_mlx *mlx)
 				mlx_put_image_to_window(mlx->win.mlx_ptr, mlx->win.win_ptr, mlx->p_text.img, j * SIZE, i * SIZE);
 			else if (mlx->lines[i][j] == 'C')
 				mlx_put_image_to_window(mlx->win.mlx_ptr, mlx->win.win_ptr, mlx->c_text.img, j * SIZE, i * SIZE);
+			else if (mlx->lines[i][j] == 'E')
+				mlx_put_image_to_window(mlx->win.mlx_ptr, mlx->win.win_ptr, mlx->exit_text.img, j * SIZE, i * SIZE);
 			j++;
         }
         i++;
@@ -355,21 +357,69 @@ void ft_load_ressources(t_mlx *mlx)
 	mlx->c_text.relative_path = "/Users/chael-ha/Desktop/ft_cub 2/textures/bit.xpm";
 	ft_load_texture(mlx->c_text.relative_path, &mlx->c_text, mlx);
 	
+	mlx->exit_text.relative_path = "/Users/chael-ha/goinfre/1.xpm";
+	ft_load_texture(mlx->exit_text.relative_path, &mlx->exit_text, mlx);
+	
 	map_texture_array(mlx, &mlx->w_text);
 	map_texture_array(mlx, &mlx->p_text);
 	map_texture_array(mlx, &mlx->c_text);
+	map_texture_array(mlx, &mlx->exit_text);
+}
+
+void		check_Exit(t_mlx *mlx)
+{
+	if (mlx->lines[mlx->player.y][mlx->player.x + 1] == 'E' && mlx->player.collect_ate != mlx->collectible)
+		return ;
 }
 
 void	move_right(t_mlx *mlx)
 {
+	check_Exit(mlx);
     if (mlx->lines[mlx->player.y][mlx->player.x + 1] != '1')
     {
         mlx->lines[mlx->player.y][mlx->player.x + 1] = 'P'; //update player pos in map
         mlx->lines[mlx->player.y][mlx->player.x] = '0';//del P from old pos
-        mlx->player.x = mlx->player.x+1;
+        mlx->player.x = mlx->player.x + 1;
 		mlx->player.y = mlx->player.y;
     }
 }
+
+void	move_left(t_mlx *mlx)
+{
+	check_Exit(mlx);
+    if (mlx->lines[mlx->player.y][mlx->player.x - 1] != '1')
+    {
+        mlx->lines[mlx->player.y][mlx->player.x - 1] = 'P'; //update player pos in map
+        mlx->lines[mlx->player.y][mlx->player.x] = '0';//del P from old pos
+        mlx->player.x = mlx->player.x - 1;
+		mlx->player.y = mlx->player.y;
+    }
+}
+
+void	move_up(t_mlx *mlx)
+{
+	check_Exit(mlx);
+    if (mlx->lines[mlx->player.y - 1][mlx->player.x] != '1')
+    {
+        mlx->lines[mlx->player.y - 1][mlx->player.x] = 'P'; //update player pos in map
+        mlx->lines[mlx->player.y][mlx->player.x] = '0';//del P from old pos
+        mlx->player.x = mlx->player.x;
+		mlx->player.y = mlx->player.y - 1;
+    }
+}
+
+void	move_down(t_mlx *mlx)
+{
+	check_Exit(mlx);
+    if (mlx->lines[mlx->player.y + 1][mlx->player.x] != '1')
+    {
+        mlx->lines[mlx->player.y + 1][mlx->player.x] = 'P'; //update player pos in map
+        mlx->lines[mlx->player.y][mlx->player.x] = '0';//del P from old pos
+        mlx->player.x = mlx->player.x;
+		mlx->player.y = mlx->player.y + 1;
+    }
+}
+
 void	screen_to_black(t_mlx *mlx)
 {
 	int i = 0;
@@ -390,13 +440,18 @@ int     key_press(int keycode, t_mlx *mlx)
 {
     if (keycode == 53)
         exit(0);
-   if (keycode == 2)
-    {
+   	if (keycode == 2)
         move_right(mlx);
-    }
+	if (keycode == 1)
+        move_down(mlx);
+	if (keycode == 13)
+        move_up(mlx);
+	if (keycode == 0)
+        move_left(mlx);
 	// clean image
 	screen_to_black(mlx);
 	mlx_put_image_to_window(mlx->win.mlx_ptr, mlx->win.win_ptr, mlx->screen_img.img, 0, 0);
+	// 
 	draw_map(mlx);
 
     return (0);
