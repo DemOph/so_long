@@ -6,13 +6,19 @@
 /*   By: chael-ha <chael-ha@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/17 14:25:09 by chael-ha          #+#    #+#             */
-/*   Updated: 2021/09/27 16:16:31 by chael-ha         ###   ########.fr       */
+/*   Updated: 2021/09/27 19:34:04 by chael-ha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <mlx.h>
+#include <unistd.h>
 
 #define SIZE	42
+#define UP_KEY		13
+#define DOWN_KEY	1
+#define RIGHT_KEY	2
+#define LEFT_KEY	0
+#define ESC			53
 
 typedef struct	s_data {
 	void	*img;
@@ -56,6 +62,7 @@ typedef struct		s_player_pos
 	int				y;
 	int				player_count;
 	int				collect_ate;
+	int				exit6;
 }					t_player_pos;
 
 typedef	struct		s_mlx
@@ -86,8 +93,10 @@ void 		init_param(t_mlx *mlx)
 	mlx->collectible = 0;
 	mlx->exi = 0;
 	mlx->player.collect_ate = 0;
-
+	mlx->player.exit6 = 0 ;
 }
 
-// int     key_press(int keycode, t_mlx *mlx);
-// int     key_release(int keycode, t_mlx *mlx);
+void	ft_putchar(char c);
+void	ft_putnbr(int n);
+void	ft_putstr(char *s);
+size_t	ft_strlen(char const *s);

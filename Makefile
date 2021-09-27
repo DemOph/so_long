@@ -6,32 +6,34 @@
 #    By: chael-ha <chael-ha@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/09/17 14:16:38 by chael-ha          #+#    #+#              #
-#    Updated: 2021/09/26 11:41:16 by chael-ha         ###   ########.fr        #
+#    Updated: 2021/09/27 19:39:06 by chael-ha         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME	= so_long
 
 MINILIBX = -lmlx -framework OpenGL -framework AppKit
-SRC		= ft_readmap.c \
-		get_next_line/get_next_line.c \
+SRC		= get_next_line/get_next_line.c \
 		get_next_line/get_next_line_utils.c \
 		ft_atoi.c \
-		# ft_event.c \
+		ft_putchar.c \
+		ft_putnbr.c \
+		ft_putstr.c \
+
 
 OBJ = $(SRC:.c=.o)
 		
 DEPS = structs.h \
 	get_next_line/get_next_line.h \
 
-# CFLAGS = -Wall -Werror -Wextra
+CFLAGS = -Wall -Werror -Wextra
 CC = gcc
 RM = rm -rf
 
 all : $(NAME)
 	
 $(NAME) : $(OBJ) $(DEPS)	
-	$(CC) -g $(CFLAGS) $(MINILIBX) ft_readmap.c -o $(NAME)
+	$(CC) -g $(CFLAGS) $(MINILIBX) $(SRC) ft_readmap.c -o $(NAME)
 #ft_readmap.c
 
 #$(OBJ) : %.o: %.c
