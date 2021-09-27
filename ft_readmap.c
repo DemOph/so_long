@@ -6,7 +6,7 @@
 /*   By: chael-ha <chael-ha@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/17 14:25:00 by chael-ha          #+#    #+#             */
-/*   Updated: 2021/09/26 17:31:33 by chael-ha         ###   ########.fr       */
+/*   Updated: 2021/09/27 16:30:26 by chael-ha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -191,12 +191,12 @@ char	**ft_readmap(char *filename, t_mlx *mlx)
 	check_map(mlx->lines, mlx);
 	mlx->max_x = countx(mlx->lines);
 	mlx->max_y = county(mlx->lines);
-	WINDOW_HEIGHT = mlx->max_x * SIZE;
-	WINDOW_WIDTH = mlx->max_y * SIZE;
-	// WINDOW_HEIGHT = 1024;
-	// WINDOW_WIDTH = 1024;
+	mlx->win.height = mlx->max_x * SIZE;
+	mlx->win.height = mlx->max_y * SIZE;
+	// mlx->win.height = 1024;
+	// mlx->win.height = 1024;
 	is_map_rectang(mlx);
-	printf("width = %d and height = %d are\n", WINDOW_WIDTH, WINDOW_HEIGHT);
+	printf("width = %d and height = %d are\n", mlx->win.height, mlx->win.height);
 	is_map_closed(mlx);
 	is_map_valid(mlx);
 	return (mlx->lines);
@@ -224,7 +224,6 @@ char	**ft_readmap(char *filename, t_mlx *mlx)
 // 	}
 // }
 
-
 void	my_mlx_pixel_put(t_texture *text, int x, int y, int color)
 {
 	char	*dst;
@@ -236,8 +235,10 @@ void	my_mlx_pixel_put(t_texture *text, int x, int y, int color)
 int	ft_load_texture(char *path, t_texture *data, t_mlx *mlx)
 {
 	data->img = mlx_xpm_file_to_image(mlx->win.mlx_ptr, path, &data->img_width, &data->img_height);
+	if (!data->img)
+		ft_put_error("Couldn't loat the texture a zayn \\-/\n", mlx);
 	data->img = (int *)mlx_get_data_addr(data->img,
-			&data->bits_per_pixel, &data->line_length, &data->endian);
+		&data->bits_per_pixel, &data->line_length, &data->endian);
 	return (1);
 }
 
@@ -261,64 +262,10 @@ void map_texture_array(t_mlx *mlx, t_texture *text)
 	(*text) = mapped_texture;
 }
 
-void	draw_square(int i, int j, t_mlx mlx)
-{
-	// int x;
-	// int	y;
-
-	// x = 0;
-	// while (x < SIZE)
-	// {
-	// 	y = 0;
-	// 	while (y < SIZE)
-	// 	{
-			//and here
-
-			mlx_put_image_to_window(mlx.win.mlx_ptr, mlx.win.win_ptr, mlx.w_text.img, j * SIZE, i * SIZE);
-			//my_mlx_pixel_put(data, x + (j * SIZE), y + (i * SIZE), 0x00ff00ff);
-	// 		y++;
-	// 	}
-	// 	x++;
-	// }
-}
-
-// void    draw_mapp(t_data *data, t_mlx *mlx)
+// void	draw_square(int i, int j, t_mlx mlx)
 // {
-//     int i;
-//     int j;
-
-
-//     i = 0;
-//     while (mlx->lines[i])
-//     {
-//         j = 0;
-//         while (mlx->lines[i][j])
-//         {
-// 			colorTheMap(data, i, j, *mlx);//here
-// 			j++;
-//         }
-//         i++;
-//     }
+// 	mlx_put_image_to_window(mlx.win.mlx_ptr, mlx.win.win_ptr, mlx.w_text.img, j * SIZE, i * SIZE);
 // }
-// void	colorTheMap(t_data *data)
-// {
-// 	int x;
-// 	int	y;
-
-// 	x = 0;
-// 	while (x < SIZE)
-// 	{
-// 		y = 0;
-// 		while (y < SIZE)
-// 		{
-// 			//mlx_put_image_to_window(mlx.win.mlx_ptr, mlx.win.win_ptr, data.img, 0,i * SIZE);
-// 			my_mlx_pixel_put(data, x , y, 0x00ff00ff);
-// 			y++;
-// 		}
-// 		x++;
-// 	}
-// }
-
 void    draw_map(t_mlx *mlx)
 {
     int i;
@@ -351,13 +298,13 @@ void ft_load_ressources(t_mlx *mlx)
 	ft_load_texture(mlx->w_text.relative_path, &mlx->w_text, mlx);
 
 
-	mlx->p_text.relative_path = "/Users/chael-ha/Desktop/texture/textures/mc.xpm";
+	mlx->p_text.relative_path = "/Users/chael-ha/goinfre/mc.xpm";
 	ft_load_texture(mlx->p_text.relative_path, &mlx->p_text, mlx);
 
 	mlx->c_text.relative_path = "/Users/chael-ha/Desktop/ft_cub 2/textures/bit.xpm";
 	ft_load_texture(mlx->c_text.relative_path, &mlx->c_text, mlx);
 	
-	mlx->exit_text.relative_path = "/Users/chael-ha/goinfre/1.xpm";
+	mlx->exit_text.relative_path = "/Users/chael-ha/goinfre/exit.xpm";
 	ft_load_texture(mlx->exit_text.relative_path, &mlx->exit_text, mlx);
 	
 	map_texture_array(mlx, &mlx->w_text);
@@ -366,68 +313,14 @@ void ft_load_ressources(t_mlx *mlx)
 	map_texture_array(mlx, &mlx->exit_text);
 }
 
-void		check_Exit(t_mlx *mlx)
-{
-	if (mlx->lines[mlx->player.y][mlx->player.x + 1] == 'E' && mlx->player.collect_ate != mlx->collectible)
-		return ;
-}
-
-void	move_right(t_mlx *mlx)
-{
-	check_Exit(mlx);
-    if (mlx->lines[mlx->player.y][mlx->player.x + 1] != '1')
-    {
-        mlx->lines[mlx->player.y][mlx->player.x + 1] = 'P'; //update player pos in map
-        mlx->lines[mlx->player.y][mlx->player.x] = '0';//del P from old pos
-        mlx->player.x = mlx->player.x + 1;
-		mlx->player.y = mlx->player.y;
-    }
-}
-
-void	move_left(t_mlx *mlx)
-{
-	check_Exit(mlx);
-    if (mlx->lines[mlx->player.y][mlx->player.x - 1] != '1')
-    {
-        mlx->lines[mlx->player.y][mlx->player.x - 1] = 'P'; //update player pos in map
-        mlx->lines[mlx->player.y][mlx->player.x] = '0';//del P from old pos
-        mlx->player.x = mlx->player.x - 1;
-		mlx->player.y = mlx->player.y;
-    }
-}
-
-void	move_up(t_mlx *mlx)
-{
-	check_Exit(mlx);
-    if (mlx->lines[mlx->player.y - 1][mlx->player.x] != '1')
-    {
-        mlx->lines[mlx->player.y - 1][mlx->player.x] = 'P'; //update player pos in map
-        mlx->lines[mlx->player.y][mlx->player.x] = '0';//del P from old pos
-        mlx->player.x = mlx->player.x;
-		mlx->player.y = mlx->player.y - 1;
-    }
-}
-
-void	move_down(t_mlx *mlx)
-{
-	check_Exit(mlx);
-    if (mlx->lines[mlx->player.y + 1][mlx->player.x] != '1')
-    {
-        mlx->lines[mlx->player.y + 1][mlx->player.x] = 'P'; //update player pos in map
-        mlx->lines[mlx->player.y][mlx->player.x] = '0';//del P from old pos
-        mlx->player.x = mlx->player.x;
-		mlx->player.y = mlx->player.y + 1;
-    }
-}
-
 void	screen_to_black(t_mlx *mlx)
 {
 	int i = 0;
     int j = 0;
-	while (i < WINDOW_HEIGHT)
+	while (i < mlx->win.height)
 	{
 	j = 0;
-	while (j < WINDOW_WIDTH)
+	while (j < mlx->win.width)
 	{
 		my_mlx_pixel_put(&mlx->screen_img, j, i, 0x00000000);
 		j++;
@@ -436,40 +329,160 @@ void	screen_to_black(t_mlx *mlx)
 	}
 }
 
+int	move_right(t_mlx *mlx)
+{
+	if (mlx->lines[mlx->player.y][mlx->player.x + 1] == 'E' && mlx->player.collect_ate != mlx->collectible)
+		return (0);
+	else if (mlx->lines[mlx->player.y][mlx->player.x + 1] == 'E' && mlx->player.collect_ate == mlx->collectible)
+	{
+		mlx_destroy_window(mlx->win.mlx_ptr, mlx->win.win_ptr);
+		mlx->win.mlx_ptr = mlx_init();
+		mlx->win.win_ptr = mlx_new_window(mlx->win.mlx_ptr, mlx->win.width, mlx->win.height, "./so_long");
+		mlx->screen_img.img = mlx_new_image(mlx->win.mlx_ptr, mlx->win.width, mlx->win.height);// NOT THERE ANYMORE
+		mlx->screen_img.addr = mlx_get_data_addr(mlx->screen_img.img, &mlx->screen_img.bits_per_pixel, &mlx->screen_img.line_length,&mlx->screen_img.endian);
+		mlx_string_put(mlx->win.mlx_ptr, mlx->win.win_ptr, mlx->win.width/2, mlx->win.height/2, 0x008000, "YOU WIN!");
+		mlx_loop(mlx->win.mlx_ptr); //window rendering
+		return (0);
+	}
+	if (mlx->lines[mlx->player.y][mlx->player.x + 1] == 'C')
+		mlx->player.collect_ate++;
+    if (mlx->lines[mlx->player.y][mlx->player.x + 1] != '1')
+    {
+        mlx->lines[mlx->player.y][mlx->player.x + 1] = 'P'; //update player pos in map
+        mlx->lines[mlx->player.y][mlx->player.x] = '0';//del P from old pos
+        mlx->player.x = mlx->player.x + 1;
+		mlx->player.y = mlx->player.y;
+		mlx->player.player_count++;
+    }
+	return (1);
+}
+
+int	move_left(t_mlx *mlx)
+{
+	if (mlx->lines[mlx->player.y][mlx->player.x - 1] == 'E' && mlx->player.collect_ate != mlx->collectible)
+		return (0);
+	else if (mlx->lines[mlx->player.y][mlx->player.x - 1] == 'E' && mlx->player.collect_ate == mlx->collectible)
+	{
+		mlx_destroy_window(mlx->win.mlx_ptr, mlx->win.win_ptr);
+		mlx->win.mlx_ptr = mlx_init();
+		mlx->win.win_ptr = mlx_new_window(mlx->win.mlx_ptr, mlx->win.height, mlx->win.height, "./so_long");
+		mlx->screen_img.img = mlx_new_image(mlx->win.mlx_ptr, mlx->win.height, mlx->win.height);// NOT THERE ANYMORE
+		mlx->screen_img.addr = mlx_get_data_addr(mlx->screen_img.img, &mlx->screen_img.bits_per_pixel, &mlx->screen_img.line_length,&mlx->screen_img.endian);
+		mlx_string_put(mlx->win.mlx_ptr, mlx->win.win_ptr, mlx->win.height/2, mlx->win.height/2, 0x008000, "YOU WIN!");
+		mlx_loop(mlx->win.mlx_ptr); //window rendering
+		return (0);
+	}
+	if (mlx->lines[mlx->player.y][mlx->player.x - 1] == 'C')
+		mlx->player.collect_ate++;
+    if (mlx->lines[mlx->player.y][mlx->player.x - 1] != '1')
+    {
+        mlx->lines[mlx->player.y][mlx->player.x - 1] = 'P'; //update player pos in map
+        mlx->lines[mlx->player.y][mlx->player.x] = '0';//del P from old pos
+        mlx->player.x = mlx->player.x - 1;
+		mlx->player.y = mlx->player.y;
+		mlx->player.player_count++;
+	}
+	return (1);
+}
+
+int     key_press_E(int keycode, t_mlx *mlx)
+{
+	if (keycode == 53)
+		exit(0);
+}
+int	move_up(t_mlx *mlx)
+{
+	if (mlx->lines[mlx->player.y - 1][mlx->player.x] == 'E' && mlx->player.collect_ate != mlx->collectible)
+		return (0);
+	if (mlx->lines[mlx->player.y - 1][mlx->player.x] == 'E' && mlx->player.collect_ate == mlx->collectible)
+	{
+		mlx_destroy_window(mlx->win.mlx_ptr, mlx->win.win_ptr);
+		mlx->win.mlx_ptr = mlx_init();
+		mlx->win.win_ptr = mlx_new_window(mlx->win.mlx_ptr, mlx->win.height, mlx->win.height, "./so_long");
+		mlx->screen_img.img = mlx_new_image(mlx->win.mlx_ptr, mlx->win.height, mlx->win.height);// NOT THERE ANYMORE
+		mlx->screen_img.addr = mlx_get_data_addr(mlx->screen_img.img, &mlx->screen_img.bits_per_pixel, &mlx->screen_img.line_length,&mlx->screen_img.endian);
+		mlx_string_put(mlx->win.mlx_ptr, mlx->win.win_ptr, mlx->win.height/2, mlx->win.height/2, 0x008000, "YOU WIN!");
+		mlx_hook(mlx->win.win_ptr, 2, 1L<<0, key_press_E , &mlx);
+		mlx_loop(mlx->win.mlx_ptr); //window rendering
+		return (0);
+	}
+	if (mlx->lines[mlx->player.y - 1][mlx->player.x] == 'C')
+		mlx->player.collect_ate++;
+    if (mlx->lines[mlx->player.y - 1][mlx->player.x] != '1')
+    {
+        mlx->lines[mlx->player.y - 1][mlx->player.x] = 'P'; //update player pos in map
+        mlx->lines[mlx->player.y][mlx->player.x] = '0';//del P from old pos
+        mlx->player.x = mlx->player.x;
+		mlx->player.y = mlx->player.y - 1;
+		mlx->player.player_count++;		
+    }
+	return (1);
+}
+
+int	move_down(t_mlx *mlx)
+{
+	if (mlx->lines[mlx->player.y + 1][mlx->player.x] == 'E' && mlx->player.collect_ate != mlx->collectible)
+		return (0);
+	if (mlx->lines[mlx->player.y + 1][mlx->player.x] == 'E' && mlx->player.collect_ate == mlx->collectible)
+	{
+		mlx_destroy_window(mlx->win.mlx_ptr, mlx->win.win_ptr);
+		mlx->win.mlx_ptr = mlx_init();
+		mlx->win.win_ptr = mlx_new_window(mlx->win.mlx_ptr, mlx->win.height, mlx->win.height, "./so_long");
+		mlx->screen_img.img = mlx_new_image(mlx->win.mlx_ptr, mlx->win.height, mlx->win.height);// NOT THERE ANYMORE
+		mlx->screen_img.addr = mlx_get_data_addr(mlx->screen_img.img, &mlx->screen_img.bits_per_pixel, &mlx->screen_img.line_length,&mlx->screen_img.endian);
+		mlx_string_put(mlx->win.mlx_ptr, mlx->win.win_ptr, mlx->win.height/2, mlx->win.height/2, 0x008000, "YOU WIN!");
+		mlx_loop(mlx->win.mlx_ptr); //window rendering
+		return (0);
+	}
+	if (mlx->lines[mlx->player.y + 1][mlx->player.x] == 'C')
+		mlx->player.collect_ate++;
+    if (mlx->lines[mlx->player.y + 1][mlx->player.x] != '1')
+    {
+        mlx->lines[mlx->player.y + 1][mlx->player.x] = 'P'; //update player pos in map
+        mlx->lines[mlx->player.y][mlx->player.x] = '0';//del P from old pos
+        mlx->player.x = mlx->player.x;
+		mlx->player.y = mlx->player.y + 1;
+		mlx->player.player_count++;
+    }
+	return (1);
+}
+
+
 int     key_press(int keycode, t_mlx *mlx)
 {
+	int k;
+	printf("player collect ate%d\n", mlx->player.collect_ate);
+	printf("map collect%d\n", 	mlx->collectible);
+	if (keycode == 0 || keycode == 13 || keycode == 1 || keycode == 2)
+		printf("player count %d\n", mlx->player.player_count);
     if (keycode == 53)
         exit(0);
    	if (keycode == 2)
-        move_right(mlx);
+        k = move_right(mlx);
 	if (keycode == 1)
-        move_down(mlx);
+        k = move_down(mlx);
 	if (keycode == 13)
-        move_up(mlx);
+        k = move_up(mlx);
 	if (keycode == 0)
-        move_left(mlx);
-	// clean image
-	screen_to_black(mlx);
-	mlx_put_image_to_window(mlx->win.mlx_ptr, mlx->win.win_ptr, mlx->screen_img.img, 0, 0);
-	// 
+        k = move_left(mlx);
+	// clean image if not Exit before all collect
+	if (k)
+	{
+		screen_to_black(mlx);
+		mlx_put_image_to_window(mlx->win.mlx_ptr, mlx->win.win_ptr, mlx->screen_img.img, 0, 0);
+	}
 	draw_map(mlx);
-
-    return (0);
-}
-
-int     key_release(int keycode, t_mlx *mlx)
-{
-    printf("Key pressed -> %d\n", keycode);
     return (0);
 }
 
 int main(int argc, char **argv)
 {
-	(void)argc;
-	int i;
+	int		i;
 	t_mlx	mlx;
+	char	**s;
 
-	char **s;
+	if (argc > 2)
+		ft_put_error("too much arguments1\n", &mlx);
 	s = ft_readmap(argv[1], &mlx);
 	i = 0;
 	while(s[i])
@@ -478,13 +491,13 @@ int main(int argc, char **argv)
 		i++;
 	}
 	mlx.win.mlx_ptr = mlx_init();
-	mlx.win.win_ptr = mlx_new_window(mlx.win.mlx_ptr, WINDOW_WIDTH, WINDOW_HEIGHT, "./so_long");
-	mlx.screen_img.img = mlx_new_image(mlx.win.mlx_ptr, WINDOW_WIDTH, WINDOW_HEIGHT);// NOT THERE ANYMORE
+	mlx.win.win_ptr = mlx_new_window(mlx.win.mlx_ptr, mlx.win.height, mlx.win.height, "./so_long");
+	mlx.screen_img.img = mlx_new_image(mlx.win.mlx_ptr, mlx.win.height, mlx.win.height);// NOT THERE ANYMORE
 	mlx.screen_img.addr = mlx_get_data_addr(mlx.screen_img.img, &mlx.screen_img.bits_per_pixel, &mlx.screen_img.line_length,&mlx.screen_img.endian);
 	ft_load_ressources(&mlx);
 	draw_map(&mlx);
 	mlx_hook(mlx.win.win_ptr, 2, 1L<<0, key_press , &mlx);
-    mlx_hook(mlx.win.win_ptr, 3, 1L<<1, key_release , &mlx);//slower than mlx_loop_hook
+    //mlx_hook(mlx.win.win_ptr, 3, 1L<<1, key_release , &mlx);//slower than mlx_loop_hook
 	mlx_loop(mlx.win.mlx_ptr); //window rendering
 }
 
@@ -498,5 +511,5 @@ collect objects
 counter for collectibles
 Exit event
 
-
+  nm 
 */

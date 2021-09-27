@@ -6,21 +6,13 @@
 /*   By: chael-ha <chael-ha@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/17 14:25:09 by chael-ha          #+#    #+#             */
-/*   Updated: 2021/09/26 17:23:27 by chael-ha         ###   ########.fr       */
+/*   Updated: 2021/09/27 16:16:31 by chael-ha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <mlx.h>
 
-#define FALSE	0
-#define TRUE	1
-#define SIZE	30
-
-
-int	WINDOW_HEIGHT = FALSE;
-int	WINDOW_WIDTH  = FALSE;
-int isGameRunning = FALSE;
-
+#define SIZE	42
 
 typedef struct	s_data {
 	void	*img;
@@ -52,7 +44,7 @@ t_data texture;
 typedef struct		s_window
 {
 	int				width;
-	int				heigth;
+	int				height;
 	char			*title;
 	void			*mlx_ptr;
 	void			*win_ptr;
@@ -60,9 +52,9 @@ typedef struct		s_window
 
 typedef struct		s_player_pos
 {
-	int				player_count;
 	int				x;
 	int				y;
+	int				player_count;
 	int				collect_ate;
 }					t_player_pos;
 
@@ -93,6 +85,8 @@ void 		init_param(t_mlx *mlx)
 	mlx->player.player_count = 0;
 	mlx->collectible = 0;
 	mlx->exi = 0;
+	mlx->player.collect_ate = 0;
+
 }
 
 // int     key_press(int keycode, t_mlx *mlx);
