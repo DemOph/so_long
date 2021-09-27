@@ -6,7 +6,7 @@
 /*   By: chael-ha <chael-ha@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/17 14:25:00 by chael-ha          #+#    #+#             */
-/*   Updated: 2021/09/27 16:30:26 by chael-ha         ###   ########.fr       */
+/*   Updated: 2021/09/27 17:30:13 by chael-ha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -192,11 +192,11 @@ char	**ft_readmap(char *filename, t_mlx *mlx)
 	mlx->max_x = countx(mlx->lines);
 	mlx->max_y = county(mlx->lines);
 	mlx->win.height = mlx->max_x * SIZE;
-	mlx->win.height = mlx->max_y * SIZE;
+	mlx->win.width = mlx->max_y * SIZE;
 	// mlx->win.height = 1024;
 	// mlx->win.height = 1024;
 	is_map_rectang(mlx);
-	printf("width = %d and height = %d are\n", mlx->win.height, mlx->win.height);
+	printf("width = %d and height = %d are\n", mlx->win.width, mlx->win.height);
 	is_map_closed(mlx);
 	is_map_valid(mlx);
 	return (mlx->lines);
@@ -329,124 +329,116 @@ void	screen_to_black(t_mlx *mlx)
 	}
 }
 
-int	move_right(t_mlx *mlx)
-{
-	if (mlx->lines[mlx->player.y][mlx->player.x + 1] == 'E' && mlx->player.collect_ate != mlx->collectible)
-		return (0);
-	else if (mlx->lines[mlx->player.y][mlx->player.x + 1] == 'E' && mlx->player.collect_ate == mlx->collectible)
-	{
-		mlx_destroy_window(mlx->win.mlx_ptr, mlx->win.win_ptr);
-		mlx->win.mlx_ptr = mlx_init();
-		mlx->win.win_ptr = mlx_new_window(mlx->win.mlx_ptr, mlx->win.width, mlx->win.height, "./so_long");
-		mlx->screen_img.img = mlx_new_image(mlx->win.mlx_ptr, mlx->win.width, mlx->win.height);// NOT THERE ANYMORE
-		mlx->screen_img.addr = mlx_get_data_addr(mlx->screen_img.img, &mlx->screen_img.bits_per_pixel, &mlx->screen_img.line_length,&mlx->screen_img.endian);
-		mlx_string_put(mlx->win.mlx_ptr, mlx->win.win_ptr, mlx->win.width/2, mlx->win.height/2, 0x008000, "YOU WIN!");
-		mlx_loop(mlx->win.mlx_ptr); //window rendering
-		return (0);
-	}
-	if (mlx->lines[mlx->player.y][mlx->player.x + 1] == 'C')
-		mlx->player.collect_ate++;
-    if (mlx->lines[mlx->player.y][mlx->player.x + 1] != '1')
-    {
-        mlx->lines[mlx->player.y][mlx->player.x + 1] = 'P'; //update player pos in map
-        mlx->lines[mlx->player.y][mlx->player.x] = '0';//del P from old pos
-        mlx->player.x = mlx->player.x + 1;
-		mlx->player.y = mlx->player.y;
-		mlx->player.player_count++;
-    }
-	return (1);
-}
-
-int	move_left(t_mlx *mlx)
-{
-	if (mlx->lines[mlx->player.y][mlx->player.x - 1] == 'E' && mlx->player.collect_ate != mlx->collectible)
-		return (0);
-	else if (mlx->lines[mlx->player.y][mlx->player.x - 1] == 'E' && mlx->player.collect_ate == mlx->collectible)
-	{
-		mlx_destroy_window(mlx->win.mlx_ptr, mlx->win.win_ptr);
-		mlx->win.mlx_ptr = mlx_init();
-		mlx->win.win_ptr = mlx_new_window(mlx->win.mlx_ptr, mlx->win.height, mlx->win.height, "./so_long");
-		mlx->screen_img.img = mlx_new_image(mlx->win.mlx_ptr, mlx->win.height, mlx->win.height);// NOT THERE ANYMORE
-		mlx->screen_img.addr = mlx_get_data_addr(mlx->screen_img.img, &mlx->screen_img.bits_per_pixel, &mlx->screen_img.line_length,&mlx->screen_img.endian);
-		mlx_string_put(mlx->win.mlx_ptr, mlx->win.win_ptr, mlx->win.height/2, mlx->win.height/2, 0x008000, "YOU WIN!");
-		mlx_loop(mlx->win.mlx_ptr); //window rendering
-		return (0);
-	}
-	if (mlx->lines[mlx->player.y][mlx->player.x - 1] == 'C')
-		mlx->player.collect_ate++;
-    if (mlx->lines[mlx->player.y][mlx->player.x - 1] != '1')
-    {
-        mlx->lines[mlx->player.y][mlx->player.x - 1] = 'P'; //update player pos in map
-        mlx->lines[mlx->player.y][mlx->player.x] = '0';//del P from old pos
-        mlx->player.x = mlx->player.x - 1;
-		mlx->player.y = mlx->player.y;
-		mlx->player.player_count++;
-	}
-	return (1);
-}
-
 int     key_press_E(int keycode, t_mlx *mlx)
 {
 	if (keycode == 53)
 		exit(0);
-}
-int	move_up(t_mlx *mlx)
-{
-	if (mlx->lines[mlx->player.y - 1][mlx->player.x] == 'E' && mlx->player.collect_ate != mlx->collectible)
-		return (0);
-	if (mlx->lines[mlx->player.y - 1][mlx->player.x] == 'E' && mlx->player.collect_ate == mlx->collectible)
-	{
-		mlx_destroy_window(mlx->win.mlx_ptr, mlx->win.win_ptr);
-		mlx->win.mlx_ptr = mlx_init();
-		mlx->win.win_ptr = mlx_new_window(mlx->win.mlx_ptr, mlx->win.height, mlx->win.height, "./so_long");
-		mlx->screen_img.img = mlx_new_image(mlx->win.mlx_ptr, mlx->win.height, mlx->win.height);// NOT THERE ANYMORE
-		mlx->screen_img.addr = mlx_get_data_addr(mlx->screen_img.img, &mlx->screen_img.bits_per_pixel, &mlx->screen_img.line_length,&mlx->screen_img.endian);
-		mlx_string_put(mlx->win.mlx_ptr, mlx->win.win_ptr, mlx->win.height/2, mlx->win.height/2, 0x008000, "YOU WIN!");
-		mlx_hook(mlx->win.win_ptr, 2, 1L<<0, key_press_E , &mlx);
-		mlx_loop(mlx->win.mlx_ptr); //window rendering
-		return (0);
-	}
-	if (mlx->lines[mlx->player.y - 1][mlx->player.x] == 'C')
-		mlx->player.collect_ate++;
-    if (mlx->lines[mlx->player.y - 1][mlx->player.x] != '1')
-    {
-        mlx->lines[mlx->player.y - 1][mlx->player.x] = 'P'; //update player pos in map
-        mlx->lines[mlx->player.y][mlx->player.x] = '0';//del P from old pos
-        mlx->player.x = mlx->player.x;
-		mlx->player.y = mlx->player.y - 1;
-		mlx->player.player_count++;		
-    }
-	return (1);
+	return (0);
 }
 
-int	move_down(t_mlx *mlx)
+int ft_success(t_mlx *mlx)
 {
-	if (mlx->lines[mlx->player.y + 1][mlx->player.x] == 'E' && mlx->player.collect_ate != mlx->collectible)
+	mlx_clear_window(mlx->win.mlx_ptr, mlx->win.win_ptr);
+	mlx_string_put(mlx->win.mlx_ptr, mlx->win.win_ptr, mlx->win.width/2, mlx->win.height/2, 0x008000, "YOU WIN!");
+	mlx_hook(mlx->win.win_ptr, 2, 1L<<0, key_press_E , &mlx);
+	mlx_loop(mlx->win.mlx_ptr); //window rendering
+	return (0);
+}
+
+// int	move_right(t_mlx *mlx)
+// {
+// 	if (mlx->lines[mlx->player.y][mlx->player.x + 1] == 'E' && mlx->player.collect_ate != mlx->collectible)
+// 		return (0);
+// 	else if (mlx->lines[mlx->player.y][mlx->player.x + 1] == 'E' && mlx->player.collect_ate == mlx->collectible)
+// 		ft_success(mlx);
+// 	if (mlx->lines[mlx->player.y][mlx->player.x + 1] == 'C')
+// 		mlx->player.collect_ate++;
+//     if (mlx->lines[mlx->player.y][mlx->player.x + 1] != '1')
+//     {
+//         mlx->lines[mlx->player.y][mlx->player.x + 1] = 'P'; //update player pos in map
+//         mlx->lines[mlx->player.y][mlx->player.x] = '0';//del P from old pos
+//         mlx->player.x = mlx->player.x + 1;
+// 		mlx->player.y = mlx->player.y;
+// 		mlx->player.player_count++;
+//     }
+// 	return (1);
+// }
+
+// int	move_left(t_mlx *mlx)
+// {
+// 	if (mlx->lines[mlx->player.y][mlx->player.x - 1] == 'E' && mlx->player.collect_ate != mlx->collectible)
+// 		return (0);
+// 	else if (mlx->lines[mlx->player.y][mlx->player.x - 1] == 'E' && mlx->player.collect_ate == mlx->collectible)
+// 		ft_success(mlx);
+// 	if (mlx->lines[mlx->player.y][mlx->player.x - 1] == 'C')
+// 		mlx->player.collect_ate++;
+//     if (mlx->lines[mlx->player.y][mlx->player.x - 1] != '1')
+//     {
+//         mlx->lines[mlx->player.y][mlx->player.x - 1] = 'P'; //update player pos in map
+//         mlx->lines[mlx->player.y][mlx->player.x] = '0';//del P from old pos
+//         mlx->player.x = mlx->player.x - 1;
+// 		mlx->player.y = mlx->player.y;
+// 		mlx->player.player_count++;
+// 	}
+// 	return (1);
+// }
+
+// int	move_up(t_mlx *mlx)
+// {
+// 	if (mlx->lines[mlx->player.y - 1][mlx->player.x] == 'E' && mlx->player.collect_ate != mlx->collectible)
+// 		return (0);
+// 	if (mlx->lines[mlx->player.y - 1][mlx->player.x] == 'E' && mlx->player.collect_ate == mlx->collectible)
+// 		ft_success(mlx);
+// 	if (mlx->lines[mlx->player.y - 1][mlx->player.x] == 'C')
+// 		mlx->player.collect_ate++;
+//     if (mlx->lines[mlx->player.y - 1][mlx->player.x] != '1')
+//     {
+//         mlx->lines[mlx->player.y - 1][mlx->player.x] = 'P'; //update player pos in map
+//         mlx->lines[mlx->player.y][mlx->player.x] = '0';//del P from old pos
+//         mlx->player.x = mlx->player.x;
+// 		mlx->player.y = mlx->player.y - 1;
+// 		mlx->player.player_count++;		
+//     }
+// 	return (1);
+// }
+
+// int	move_down(t_mlx *mlx)
+// {
+// 	if (mlx->lines[mlx->player.y + 1][mlx->player.x] == 'E' && mlx->player.collect_ate != mlx->collectible)
+// 		return (0);
+// 	if (mlx->lines[mlx->player.y + 1][mlx->player.x] == 'E' && mlx->player.collect_ate == mlx->collectible)
+// 		ft_success(mlx);
+// 	if (mlx->lines[mlx->player.y + 1][mlx->player.x] == 'C')
+// 		mlx->player.collect_ate++;
+//     if (mlx->lines[mlx->player.y + 1][mlx->player.x] != '1')
+//     {
+//         mlx->lines[mlx->player.y + 1][mlx->player.x] = 'P'; //update player pos in map
+//         mlx->lines[mlx->player.y][mlx->player.x] = '0';//del P from old pos
+//         mlx->player.x = mlx->player.x;
+// 		mlx->player.y = mlx->player.y + 1;
+// 		mlx->player.player_count++;
+//     }
+// 	return (1);
+// }
+
+int		ft_move_player(t_mlx *mlx, int var_1, int var_2)
+{
+	if (mlx->lines[mlx->player.y + var_1][mlx->player.x + var_2] == 'E' && mlx->player.collect_ate != mlx->collectible)
 		return (0);
-	if (mlx->lines[mlx->player.y + 1][mlx->player.x] == 'E' && mlx->player.collect_ate == mlx->collectible)
-	{
-		mlx_destroy_window(mlx->win.mlx_ptr, mlx->win.win_ptr);
-		mlx->win.mlx_ptr = mlx_init();
-		mlx->win.win_ptr = mlx_new_window(mlx->win.mlx_ptr, mlx->win.height, mlx->win.height, "./so_long");
-		mlx->screen_img.img = mlx_new_image(mlx->win.mlx_ptr, mlx->win.height, mlx->win.height);// NOT THERE ANYMORE
-		mlx->screen_img.addr = mlx_get_data_addr(mlx->screen_img.img, &mlx->screen_img.bits_per_pixel, &mlx->screen_img.line_length,&mlx->screen_img.endian);
-		mlx_string_put(mlx->win.mlx_ptr, mlx->win.win_ptr, mlx->win.height/2, mlx->win.height/2, 0x008000, "YOU WIN!");
-		mlx_loop(mlx->win.mlx_ptr); //window rendering
-		return (0);
-	}
-	if (mlx->lines[mlx->player.y + 1][mlx->player.x] == 'C')
+	if (mlx->lines[mlx->player.y + var_1][mlx->player.x + var_2] == 'E' && mlx->player.collect_ate == mlx->collectible)
+		ft_success(mlx);
+	if (mlx->lines[mlx->player.y + var_1][mlx->player.x + var_2] == 'C')
 		mlx->player.collect_ate++;
-    if (mlx->lines[mlx->player.y + 1][mlx->player.x] != '1')
+    if (mlx->lines[mlx->player.y + var_1][mlx->player.x + var_2] != '1')
     {
-        mlx->lines[mlx->player.y + 1][mlx->player.x] = 'P'; //update player pos in map
+        mlx->lines[mlx->player.y + var_1][mlx->player.x + var_2] = 'P'; //update player pos in map
         mlx->lines[mlx->player.y][mlx->player.x] = '0';//del P from old pos
-        mlx->player.x = mlx->player.x;
-		mlx->player.y = mlx->player.y + 1;
+        mlx->player.x = mlx->player.x + var_2;
+		mlx->player.y = mlx->player.y + var_1;
 		mlx->player.player_count++;
     }
-	return (1);
+	return (1);	
 }
-
 
 int     key_press(int keycode, t_mlx *mlx)
 {
@@ -458,13 +450,13 @@ int     key_press(int keycode, t_mlx *mlx)
     if (keycode == 53)
         exit(0);
    	if (keycode == 2)
-        k = move_right(mlx);
+       k = ft_move_player(mlx, 0, 1);
 	if (keycode == 1)
-        k = move_down(mlx);
+        k = ft_move_player(mlx, 1, 0);
 	if (keycode == 13)
-        k = move_up(mlx);
+        k = ft_move_player(mlx, -1, 0);
 	if (keycode == 0)
-        k = move_left(mlx);
+        k = ft_move_player(mlx, 0, -1);
 	// clean image if not Exit before all collect
 	if (k)
 	{
@@ -473,6 +465,12 @@ int     key_press(int keycode, t_mlx *mlx)
 	}
 	draw_map(mlx);
     return (0);
+}
+
+int	ft_exit(t_mlx *mlx)
+{
+	exit(0);
+	return (0);
 }
 
 int main(int argc, char **argv)
@@ -491,12 +489,13 @@ int main(int argc, char **argv)
 		i++;
 	}
 	mlx.win.mlx_ptr = mlx_init();
-	mlx.win.win_ptr = mlx_new_window(mlx.win.mlx_ptr, mlx.win.height, mlx.win.height, "./so_long");
-	mlx.screen_img.img = mlx_new_image(mlx.win.mlx_ptr, mlx.win.height, mlx.win.height);// NOT THERE ANYMORE
+	mlx.win.win_ptr = mlx_new_window(mlx.win.mlx_ptr, mlx.win.width, mlx.win.height, "./so_long");
+	mlx.screen_img.img = mlx_new_image(mlx.win.mlx_ptr, mlx.win.width, mlx.win.height);// NOT THERE ANYMORE
 	mlx.screen_img.addr = mlx_get_data_addr(mlx.screen_img.img, &mlx.screen_img.bits_per_pixel, &mlx.screen_img.line_length,&mlx.screen_img.endian);
 	ft_load_ressources(&mlx);
 	draw_map(&mlx);
 	mlx_hook(mlx.win.win_ptr, 2, 1L<<0, key_press , &mlx);
+	mlx_hook(mlx.win.win_ptr, 17, 1L<<0, ft_exit , &mlx);
     //mlx_hook(mlx.win.win_ptr, 3, 1L<<1, key_release , &mlx);//slower than mlx_loop_hook
 	mlx_loop(mlx.win.mlx_ptr); //window rendering
 }
