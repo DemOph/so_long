@@ -6,14 +6,23 @@
 /*   By: chael-ha <chael-ha@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/17 14:25:00 by chael-ha          #+#    #+#             */
-/*   Updated: 2021/09/27 19:41:37 by chael-ha         ###   ########.fr       */
+/*   Updated: 2021/09/28 18:54:44 by chael-ha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line/get_next_line.c"
-#include <fcntl.h>
-#include <stdio.h>
 #include "structs.h"
+
+void 		init_param(t_mlx *mlx)
+{
+	mlx->max_x = 0;
+	mlx->max_y= 0;
+	mlx->nb_map_char = 0;
+	mlx->player.player_count = 0;
+	mlx->collectible = 0;
+	mlx->exi = 0;
+	mlx->player.collect_ate = 0;
+	mlx->player.exit6 = 0 ;
+}
 
 int		delete_game(t_mlx *mlx)
 {
@@ -75,7 +84,6 @@ void	check_map_necessities(int i, int j, t_mlx *mlx)
 		mlx->player.player_count++;
 		mlx->player.x = j;
 		mlx->player.y = i;
-		//printf ("i = %d, j = %d\n", mlx->player.y,mlx->player.x);
 	}
 	else if (mlx->lines[i][j] == 'C')
 		mlx->collectible++;
@@ -202,13 +210,13 @@ void	my_mlx_pixel_put(t_texture *text, int x, int y, int color)
 	*(unsigned int*)dst = color;
 }
 
-int	ft_load_texture(char *path, t_texture *data, t_mlx *mlx)
+int	ft_load_texture(char *path, t_texture *text, t_mlx *mlx)
 {
-	data->img = mlx_xpm_file_to_image(mlx->win.mlx_ptr, path, &data->img_width, &data->img_height);
-	if (!data->img)
-		ft_put_error("Couldn't loat the texture a zayn \\-/\n", mlx);
-	data->img = (int *)mlx_get_data_addr(data->img,
-		&data->bits_per_pixel, &data->line_length, &data->endian);
+	text->img = mlx_xpm_file_to_image(mlx->win.mlx_ptr, path, &text->img_width, &text->img_height);
+	if (!text->img)
+		ft_put_error("Couldn't load the texture a zayn \\-/\n", mlx);
+	text->addr = mlx_get_data_addr(text->img,
+		&text->bits_per_pixel, &text->line_length, &text->endian);
 	return (1);
 }
 
@@ -225,10 +233,10 @@ void map_texture_array(t_mlx *mlx, t_texture *text)
 	{
 		int j = -1;
 		while(++j < SIZE)
-			my_mlx_pixel_put(&mapped_texture, i, j, ((int *)text->img)[(int)(j * ratio_y) * text->img_width + (int)(i * ratio_x)]);//postion in text tab
+			my_mlx_pixel_put(&mapped_texture, i, j, ((int *)text->addr)[(int)(j * ratio_y) * text->img_width + (int)(i * ratio_x)]);//postion in text tab
 	}
 
-	// mlx_destroy_image(mlx->win.mlx_ptr, text->img); // @TODO: delete original texture
+	mlx_destroy_image(mlx->win.mlx_ptr, text->img);
 	(*text) = mapped_texture;
 }
 
@@ -264,13 +272,13 @@ void ft_load_ressources(t_mlx *mlx)
 	ft_load_texture(mlx->w_text.relative_path, &mlx->w_text, mlx);
 
 
-	mlx->p_text.relative_path = "/Users/chael-ha/goinfre/mc.xpm";
+	mlx->p_text.relative_path = "/Users/chael-ha/Desktop/so_long/textures/mc.xpm";
 	ft_load_texture(mlx->p_text.relative_path, &mlx->p_text, mlx);
 
 	mlx->c_text.relative_path = "/Users/chael-ha/Desktop/ft_cub 2/textures/bit.xpm";
 	ft_load_texture(mlx->c_text.relative_path, &mlx->c_text, mlx);
 	
-	mlx->exit_text.relative_path = "/Users/chael-ha/goinfre/exit.xpm";
+	mlx->exit_text.relative_path = "/Users/chael-ha/Desktop/so_long/textures/exit.xpm";
 	ft_load_texture(mlx->exit_text.relative_path, &mlx->exit_text, mlx);
 	
 	map_texture_array(mlx, &mlx->w_text);
@@ -326,12 +334,11 @@ int		ft_move_player(t_mlx *mlx, int var_1, int var_2)
 int     key_press(int keycode, t_mlx *mlx)
 {
 	int k;
-	printf("player collect ate%d\n", mlx->player.collect_ate);
-	if (keycode == 0 || keycode == 13 || keycode == 1 || keycode == 2)
-	{
-		ft_putstr("player count \n");
-		 ft_putnbr(mlx->player.player_count);
-	}
+
+	k = 0;
+	ft_printf("player collect ate=%d\n" ,mlx->player.collect_ate);
+	if (keycode == LEFT_KEY || keycode == RIGHT_KEY || keycode == DOWN_KEY || keycode == UP_KEY)
+		ft_printf("player count=%d\n",mlx->player.player_count);
     if (keycode == ESC)
         exit(0);
    	if (keycode == RIGHT_KEY && !mlx->player.exit6)
@@ -358,6 +365,7 @@ int	ft_exit(void)
 	return (0);
 }
 
+
 int main(int argc, char **argv)
 {
 	t_mlx	mlx;
@@ -378,16 +386,3 @@ int main(int argc, char **argv)
 	mlx_hook(mlx.win.win_ptr, 17, 1L<<0, ft_exit , &mlx);
 	mlx_loop(mlx.win.mlx_ptr);
 }
-
-
-/*
-loading multiple textures (E, C, P)
-handle events (key pressess) (EXIT WIN EVENT)
-move character
-colision with walls
-collect objects
-counter for collectibles
-Exit event
-
-  nm 
-*/

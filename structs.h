@@ -6,14 +6,22 @@
 /*   By: chael-ha <chael-ha@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/17 14:25:09 by chael-ha          #+#    #+#             */
-/*   Updated: 2021/09/27 19:34:04 by chael-ha         ###   ########.fr       */
+/*   Updated: 2021/09/28 18:28:29 by chael-ha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#ifndef STRUCTS_H
+# define STRUCTS_H
+
+#include <fcntl.h>
+#include <stdio.h>
 #include <mlx.h>
 #include <unistd.h>
+#include <stdlib.h>
+#include "get_next_line/get_next_line.h"
+#include "ft_printf/ft_printf.h"
 
-#define SIZE	42
+#define SIZE		42
 #define UP_KEY		13
 #define DOWN_KEY	1
 #define RIGHT_KEY	2
@@ -41,11 +49,6 @@ typedef struct	s_texture{
 	int		img_width;
 	int		img_height;	
 }				t_texture;
-
-
-
-t_data mapped_texture;
-t_data texture;
 
 typedef struct		s_window
 {
@@ -83,20 +86,9 @@ typedef	struct		s_mlx
 }					t_mlx;
 
 
-
-void 		init_param(t_mlx *mlx)
-{
-	mlx->max_x = 0;
-	mlx->max_y= 0;
-	mlx->nb_map_char = 0;
-	mlx->player.player_count = 0;
-	mlx->collectible = 0;
-	mlx->exi = 0;
-	mlx->player.collect_ate = 0;
-	mlx->player.exit6 = 0 ;
-}
-
 void	ft_putchar(char c);
 void	ft_putnbr(int n);
 void	ft_putstr(char *s);
-size_t	ft_strlen(char const *s);
+//size_t	ft_strlenght(char const *s);
+
+#endif

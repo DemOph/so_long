@@ -6,16 +6,11 @@
 /*   By: chael-ha <chael-ha@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/26 16:39:38 by chael-ha          #+#    #+#             */
-/*   Updated: 2021/09/27 19:28:08 by chael-ha         ###   ########.fr       */
+/*   Updated: 2021/09/28 18:12:43 by chael-ha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "structs.h"
-
-void	ft_putchar(char c)
-{
-	write(1, &c, 1);
-}
 
 void	ft_putnbr(int n)
 {

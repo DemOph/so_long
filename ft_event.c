@@ -6,7 +6,7 @@
 /*   By: chael-ha <chael-ha@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/26 11:36:29 by chael-ha          #+#    #+#             */
-/*   Updated: 2021/09/26 15:38:40 by chael-ha         ###   ########.fr       */
+/*   Updated: 2021/09/28 18:31:16 by chael-ha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,6 @@ int     key_press(int keycode, t_mlx *mlx)
 
 int     key_release(int keycode, t_mlx *mlx)
 {
-    printf("Key pressed -> %d\n", keycode);
     return (0);
 }
 
