@@ -1,24 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_putstr.c                                        :+:      :+:    :+:   */
+/*   county.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: chael-ha <chael-ha@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/10/27 17:20:40 by chael-ha          #+#    #+#             */
-/*   Updated: 2021/09/29 13:15:32 by chael-ha         ###   ########.fr       */
+/*   Created: 2021/09/29 18:56:04 by chael-ha          #+#    #+#             */
+/*   Updated: 2021/09/29 18:56:17 by chael-ha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "structs.h"
 
-void	ft_putstr(char *s)
+int	county(char **lines)
 {
-	size_t	i;
+	int	i;
+	int	j;
 
-	if (!s)
-		return ;
 	i = 0;
-	while (i < ft_strlen(s))
-		ft_putchar(s[i++]);
+	j = 0;
+	while (lines[i][j])
+		j++;
+	return (j);
 }

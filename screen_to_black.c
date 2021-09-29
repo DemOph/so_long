@@ -1,24 +1,32 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_putstr.c                                        :+:      :+:    :+:   */
+/*   screen_to_black.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: chael-ha <chael-ha@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/10/27 17:20:40 by chael-ha          #+#    #+#             */
-/*   Updated: 2021/09/29 13:15:32 by chael-ha         ###   ########.fr       */
+/*   Created: 2021/09/29 14:00:26 by chael-ha          #+#    #+#             */
+/*   Updated: 2021/09/29 14:25:28 by chael-ha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "structs.h"
 
-void	ft_putstr(char *s)
+void	screen_to_black(t_mlx *mlx)
 {
-	size_t	i;
+	int	i;
+	int	j;
 
-	if (!s)
-		return ;
 	i = 0;
-	while (i < ft_strlen(s))
-		ft_putchar(s[i++]);
+	j = 0;
+	while (i < mlx->win.height)
+	{
+		j = 0;
+		while (j < mlx->win.width)
+		{
+			my_mlx_pixel_put(&mlx->screen_img, j, i, 0x00000000);
+			j++;
+		}
+		i++;
+	}
 }

@@ -6,7 +6,7 @@
 /*   By: chael-ha <chael-ha@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/26 16:39:38 by chael-ha          #+#    #+#             */
-/*   Updated: 2021/09/28 18:12:43 by chael-ha         ###   ########.fr       */
+/*   Updated: 2021/09/29 13:15:05 by chael-ha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,19 +14,9 @@
 
 void	ft_putnbr(int n)
 {
-	long nb;
+	long	nb;
 
 	nb = n;
-	if (nb < 0)
-	{
-		if (nb == -2147483648)
-		{
-			ft_putchar('2');
-			ft_putnbr(147483648);
-			return ;
-		}
-		nb = (-1) * nb;
-	}
 	if (nb > 9)
 	{
 		ft_putnbr(nb / 10);
