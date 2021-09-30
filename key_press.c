@@ -6,7 +6,7 @@
 /*   By: chael-ha <chael-ha@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/26 11:36:29 by chael-ha          #+#    #+#             */
-/*   Updated: 2021/09/29 14:48:37 by chael-ha         ###   ########.fr       */
+/*   Updated: 2021/09/29 19:35:33 by chael-ha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,8 +32,6 @@ int	key_press(int keycode, t_mlx *mlx)
 	int	k;
 
 	k = 0;
-	ft_putstr("\nplayer collect ate = ");
-	ft_putnbr(mlx->player.collect_ate);
 	if (keycode == LEFT_KEY || keycode == RIGHT_KEY || keycode == DOWN_KEY
 		|| keycode == UP_KEY)
 	{

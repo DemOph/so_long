@@ -6,7 +6,7 @@
 /*   By: chael-ha <chael-ha@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/29 13:47:06 by chael-ha          #+#    #+#             */
-/*   Updated: 2021/09/29 16:39:38 by chael-ha         ###   ########.fr       */
+/*   Updated: 2021/09/29 19:34:36 by chael-ha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ int	ft_success(t_mlx *mlx)
 	mlx_put_image_to_window(mlx->win.mlx_ptr, mlx->win.win_ptr,
 		mlx->screen_img.img, 0, 0);
 	mlx_string_put(mlx->win.mlx_ptr, mlx->win.win_ptr, mlx->win.width / 2,
-		mlx->win.height / 2, 0x008000, "YOU WIN!");
+		mlx->win.height / 2, 0x008000, "YOU WON !!");
 	mlx->player.exit6 = 1;
 	return (0);
 }
